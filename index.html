@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SweetBliss | Cheesecakes</title>
+    <meta name="description" content="SweetBliss - Deliciosos cheesecakes en 4 sabores: Fresa, Maracuyá, Mocaccino, Chocofresa.">
+    <link rel="stylesheet" href="style.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="logo">SweetBliss</div>
+        <ul class="nav-links">
+            <li><a href="#fresa">Fresa</a></li>
+            <li><a href="#maracuya">Maracuyá</a></li>
+            <li><a href="#mocaccino">Mocaccino</a></li>
+            <li><a href="#chocofresa">Chocofresa</a></li>
+        </ul>
+    </nav>
+
+    <!-- Background Video -->
+    <video id="bg-video" class="bg-video" muted playsinline>
+        <source src="assets/background-video.mp4" type="video/mp4">
+    </video>
+
+    <!-- Content Sections -->
+    <main class="content">
+        <!-- Spacer for initial scroll -->
+        <section id="hero" class="section hero-section">
+            <div class="hero-content" data-animate>
+                <h1>Descubre la Felicidad en cada Bocado</h1>
+                <p>Desliza para explorar nuestros sabores</p>
+            </div>
+        </section>
+
+        <!-- Fresa -->
+        <section id="fresa" class="section flavor-section">
+            <div class="flavor-card" data-animate>
+                <div class="image-container">
+                    <img src="assets/fresa.jpg" alt="Cheesecake de Fresa">
+                </div>
+                <div class="info-container">
+                    <h2>Fresa</h2>
+                    <p>Un clásico atemporal. Suave y cremoso cheesecake coronado con nuestra deliciosa salsa de fresas naturales.</p>
+                    <p class="price">₡2500</p>
+                    <button class="order-btn" data-flavor="Fresa">Order Now</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Maracuyá -->
+        <section id="maracuya" class="section flavor-section">
+            <div class="flavor-card reverse" data-animate>
+                <div class="image-container">
+                    <img src="assets/maracuya.jpg" alt="Cheesecake de Maracuyá">
+                </div>
+                <div class="info-container">
+                    <h2>Maracuyá</h2>
+                    <p>La combinación perfecta entre lo dulce y lo ácido. Un toque tropical que despertará tus sentidos.</p>
+                    <p class="price">₡2500</p>
+                    <button class="order-btn" data-flavor="Maracuyá">Order Now</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Mocaccino / Chocolate -->
+        <section id="mocaccino" class="section flavor-section">
+            <div class="flavor-card" data-animate>
+                <div class="image-container">
+                    <img src="assets/mocaccino.jpg" alt="Cheesecake de Mocaccino">
+                </div>
+                <div class="info-container">
+                    <h2>Mocaccino</h2>
+                    <p>Para los amantes del chocolate y el café. Una explosión de sabor intenso en cada cucharada.</p>
+                    <p class="price">₡2500</p>
+                    <button class="order-btn" data-flavor="Mocaccino">Order Now</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Chocofresa -->
+        <section id="chocofresa" class="section flavor-section">
+            <div class="flavor-card reverse" data-animate>
+                <div class="image-container">
+                    <img src="assets/chocofresa.jpg" alt="Cheesecake de Chocofresa">
+                </div>
+                <div class="info-container">
+                    <h2>Chocofresa</h2>
+                    <p>Lo mejor de ambos mundos. La frescura de la fresa cubierta con un indulgente baño de chocolate.</p>
+                    <p class="price">₡2500</p>
+                    <button class="order-btn" data-flavor="Chocofresa">Order Now</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Comentarios Section -->
+        <section id="reviews" class="section reviews-section">
+            <div class="reviews-container" data-animate>
+                <h2>Lo que dicen nuestros clientes</h2>
+                <div id="comments-list" class="comments-list">
+                    <!-- Firebase comments will be loaded here -->
+                    <p class="loading-text">Cargando reseñas...</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Order Modal -->
+    <div id="order-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h3 id="modal-title">Order Now</h3>
+            <form id="order-form">
+                <input type="hidden" id="flavor-input">
+                <div class="form-group">
+                    <label for="quantity">Cantidad:</label>
+                    <div class="qty-selector">
+                        <button type="button" id="qty-minus">-</button>
+                        <input type="number" id="quantity" value="1" min="1" readonly>
+                        <button type="button" id="qty-plus">+</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="gift-message">Mensaje de Regalo (opcional):</label>
+                    <textarea id="gift-message" rows="3" placeholder="Escribe tu mensaje aquí..."></textarea>
+                </div>
+                <div class="form-group total-group">
+                    <span>Total:</span>
+                    <span id="total-price">₡2500</span>
+                </div>
+                <button type="submit" class="whatsapp-btn">Enviar pedido por WhatsApp</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <!-- Firebase SDK (Modular) -->
+    <script type="module" src="firebase-config.js"></script>
+    <script src="main.js"></script>
+</body>
+</html>
