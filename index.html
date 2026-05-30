@@ -12,13 +12,15 @@
 <body>
     <!-- Navbar -->
     <nav class="navbar">
-        <div class="logo">SweetBliss</div>
-        <ul class="nav-links">
-            <li><a href="#fresa">Fresa</a></li>
-            <li><a href="#maracuya">Maracuyá</a></li>
-            <li><a href="#mocaccino">Mocaccino</a></li>
-            <li><a href="#chocofresa">Chocofresa</a></li>
-        </ul>
+        <div class="logo glow">SweetBliss</div>
+        <div class="marquee-container">
+            <div class="marquee-content">
+                <span>Fresa ✦ Maracuyá ✦ Mocaccino ✦ Chocofresa ✦ </span>
+                <span>Fresa ✦ Maracuyá ✦ Mocaccino ✦ Chocofresa ✦ </span>
+                <span>Fresa ✦ Maracuyá ✦ Mocaccino ✦ Chocofresa ✦ </span>
+                <span>Fresa ✦ Maracuyá ✦ Mocaccino ✦ Chocofresa ✦ </span>
+            </div>
+        </div>
     </nav>
 
     <!-- Background Video (Muted for scroll scrubbing) -->
@@ -28,6 +30,11 @@
 
     <!-- Background Audio -->
     <audio id="bg-audio" src="assets/background-video.mp4" loop></audio>
+
+    <!-- Parallax Floating Overlay -->
+    <div class="parallax-overlay" id="parallax-overlay">
+        <!-- Partículas generadas por JS -->
+    </div>
 
     <!-- Volume Control -->
     <button id="volume-btn" class="volume-btn" title="Toggle Audio">🔊</button>
@@ -46,7 +53,7 @@
         <section id="fresa" class="section flavor-section">
             <div class="flavor-card" data-animate>
                 <div class="image-container">
-                    <img src="assets/fresa.jpg" alt="Cheesecake de Fresa">
+                    <img src="assets/fresa.jpg" alt="Cheesecake de Fresa" class="parallax-img">
                 </div>
                 <div class="info-container">
                     <h2>Fresa</h2>
@@ -61,7 +68,7 @@
         <section id="maracuya" class="section flavor-section">
             <div class="flavor-card reverse" data-animate>
                 <div class="image-container">
-                    <img src="assets/maracuya.jpg" alt="Cheesecake de Maracuyá">
+                    <img src="assets/maracuya.jpg" alt="Cheesecake de Maracuyá" class="parallax-img">
                 </div>
                 <div class="info-container">
                     <h2>Maracuyá</h2>
@@ -76,7 +83,7 @@
         <section id="mocaccino" class="section flavor-section">
             <div class="flavor-card" data-animate>
                 <div class="image-container">
-                    <img src="assets/mocaccino.jpg" alt="Cheesecake de Mocaccino">
+                    <img src="assets/mocaccino.jpg" alt="Cheesecake de Mocaccino" class="parallax-img">
                 </div>
                 <div class="info-container">
                     <h2>Mocaccino</h2>
@@ -91,7 +98,7 @@
         <section id="chocofresa" class="section flavor-section">
             <div class="flavor-card reverse" data-animate>
                 <div class="image-container">
-                    <img src="assets/chocofresa.jpg" alt="Cheesecake de Chocofresa">
+                    <img src="assets/chocofresa.jpg" alt="Cheesecake de Chocofresa" class="parallax-img">
                 </div>
                 <div class="info-container">
                     <h2>Chocofresa</h2>

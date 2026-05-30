@@ -209,4 +209,58 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (e.target === orderModal) orderModal.classList.remove('active');
         if (e.target === reviewModal) reviewModal.classList.remove('active');
     });
+
+    // --- Floating Parallax Particles ---
+    const overlay = document.getElementById('parallax-overlay');
+    const particleTypes = ['✨', '🍓', '🍃', '🍫', '☕', '✦'];
+    for(let i=0; i<20; i++) {
+        const p = document.createElement('div');
+        p.className = 'particle';
+        p.textContent = particleTypes[Math.floor(Math.random() * particleTypes.length)];
+        p.style.top = `${Math.random() * 100}vh`;
+        p.style.animationDuration = `${15 + Math.random() * 30}s`;
+        p.style.animationDelay = `-${Math.random() * 20}s`;
+        overlay.appendChild(p);
+    }
+
+    // --- 3D Mouse Parallax on Cheesecakes ---
+    const parallaxImages = document.querySelectorAll('.parallax-img');
+    
+    // Optimización: usar requestAnimationFrame para que el evento no bloquee el hilo
+    let mouseX = window.innerWidth / 2;
+    let mouseY = window.innerHeight / 2;
+    
+    document.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+    });
+    
+    document.addEventListener('touchmove', (e) => {
+        if(e.touches.length > 0) {
+            mouseX = e.touches[0].clientX;
+            mouseY = e.touches[0].clientY;
+        }
+    });
+
+    const updateParallax = () => {
+        parallaxImages.forEach(img => {
+            const rect = img.getBoundingClientRect();
+            // Comprobar si la imagen está visible en pantalla para evitar cálculos innecesarios
+            if (rect.bottom < 0 || rect.top > window.innerHeight) return;
+
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+            
+            const deltaX = (mouseX - centerX) / window.innerWidth;
+            const deltaY = (mouseY - centerY) / window.innerHeight;
+
+            const rotateX = -deltaY * 20; 
+            const rotateY = deltaX * 20;
+
+            img.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translate3d(${deltaX*30}px, ${deltaY*30}px, 20px)`;
+        });
+        requestAnimationFrame(updateParallax);
+    };
+    
+    requestAnimationFrame(updateParallax);
 });
