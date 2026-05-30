@@ -4,17 +4,46 @@ import { collection, addDoc, doc, getDoc } from "https://www.gstatic.com/firebas
 document.addEventListener('DOMContentLoaded', async () => {
     // --- Audio Control ---
     const video = document.getElementById('bg-video');
+    const audio = document.getElementById('bg-audio');
     const volumeBtn = document.getElementById('volume-btn');
     
-    volumeBtn.addEventListener('click', () => {
-        if (video.muted) {
-            video.muted = false;
+    // Attempt autoplay
+    audio.volume = 0.5;
+    let audioPlaying = false;
+
+    const tryPlayAudio = async () => {
+        if(audioPlaying) return;
+        try {
+            await audio.play();
+            audioPlaying = true;
+            volumeBtn.textContent = '🔊';
+            volumeBtn.title = 'Mute Audio';
+        } catch (err) {
+            // Autoplay prevented by browser
+            volumeBtn.textContent = '🔇';
+            volumeBtn.title = 'Play Audio';
+        }
+    };
+
+    tryPlayAudio();
+    
+    // Fallback: play on first interaction if blocked
+    document.body.addEventListener('click', () => {
+        if (!audioPlaying) tryPlayAudio();
+    }, { once: true });
+
+    volumeBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (audio.paused || !audioPlaying) {
+            audio.play();
+            audioPlaying = true;
             volumeBtn.textContent = '🔊';
             volumeBtn.title = 'Mute Audio';
         } else {
-            video.muted = true;
+            audio.pause();
+            audioPlaying = false;
             volumeBtn.textContent = '🔇';
-            volumeBtn.title = 'Toggle Audio';
+            volumeBtn.title = 'Play Audio';
         }
     });
 
