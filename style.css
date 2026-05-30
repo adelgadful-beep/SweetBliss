@@ -3,7 +3,11 @@
     --text-color: #333333;
     --primary-color: #E27D60; /* Soft warm color */
     --accent-color: #85CDCB;
-    --card-bg: rgba(255, 255, 255, 0.7);
+    /* Enhanced Glassmorphism Variables */
+    --card-bg: rgba(255, 255, 255, 0.15);
+    --card-border: rgba(255, 255, 255, 0.5);
+    --card-blur: blur(25px);
+    
     --nav-bg: rgba(255, 250, 240, 0.8);
     --font-main: 'Outfit', sans-serif;
     --elastic: cubic-bezier(0.68, -0.55, 0.265, 1.55);
@@ -32,7 +36,34 @@ body {
     height: 100vh;
     object-fit: cover;
     z-index: -1;
-    opacity: 0.8; /* Slight opacity to make content readable if video is bright */
+    opacity: 0.8; 
+}
+
+/* Volume Button */
+.volume-btn {
+    position: fixed;
+    bottom: 2rem;
+    left: 2rem;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: var(--card-bg);
+    backdrop-filter: var(--card-blur);
+    border: 1px solid var(--card-border);
+    color: var(--text-color);
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 1000;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+    transition: transform 0.3s var(--elastic), background 0.3s ease;
+}
+
+.volume-btn:hover {
+    transform: scale(1.1);
+    background: rgba(255, 255, 255, 0.4);
 }
 
 /* Navbar */
@@ -99,7 +130,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 6rem 2rem 2rem 2rem; /* padding top for navbar */
+    padding: 6rem 2rem 2rem 2rem; 
     position: relative;
 }
 
@@ -119,19 +150,20 @@ body {
     opacity: 0.8;
 }
 
-/* Flavor Cards */
+/* Flavor Cards (Enhanced Glassmorphism) */
 .flavor-card {
     display: flex;
     background: var(--card-bg);
-    backdrop-filter: blur(15px);
-    border: 1px solid rgba(255,255,255,0.4);
+    backdrop-filter: var(--card-blur);
+    -webkit-backdrop-filter: var(--card-blur);
+    border: 1px solid var(--card-border);
     border-radius: 20px;
     padding: 3rem;
     max-width: 1000px;
     width: 100%;
     gap: 4rem;
     align-items: center;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
     transform: translateY(100px);
     opacity: 0;
     transition: transform 1s var(--elastic), opacity 0.8s ease;
@@ -158,7 +190,7 @@ body {
     border-radius: 15px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.1);
     transition: transform 0.5s var(--elastic);
-    background-color: white; /* helps if images are transparent pngs */
+    background-color: transparent; 
 }
 
 .image-container img:hover {
@@ -173,12 +205,14 @@ body {
     font-size: 3rem;
     color: var(--primary-color);
     margin-bottom: 1rem;
+    text-shadow: 0 2px 4px rgba(255,255,255,0.5);
 }
 
 .info-container p {
     font-size: 1.2rem;
     line-height: 1.6;
     margin-bottom: 1.5rem;
+    font-weight: 500;
 }
 
 .price {
@@ -187,7 +221,7 @@ body {
     color: var(--text-color);
 }
 
-.order-btn {
+.btn {
     background-color: var(--primary-color);
     color: white;
     border: none;
@@ -200,13 +234,13 @@ body {
     box-shadow: 0 10px 20px rgba(226, 125, 96, 0.3);
 }
 
-.order-btn:hover {
+.btn:hover {
     transform: translateY(-5px);
     box-shadow: 0 15px 25px rgba(226, 125, 96, 0.4);
     background-color: #d16b50;
 }
 
-/* Modal */
+/* Modals (Enhanced Glassmorphism) */
 .modal {
     position: fixed;
     top: 0;
@@ -230,7 +264,9 @@ body {
 }
 
 .modal-content {
-    background: var(--bg-color);
+    background: rgba(255, 255, 255, 0.85); /* Slightly more opaque for readability of forms */
+    backdrop-filter: blur(25px);
+    border: 1px solid var(--card-border);
     padding: 3rem;
     border-radius: 20px;
     width: 90%;
@@ -259,7 +295,7 @@ body {
     transform: rotate(90deg);
 }
 
-#modal-title {
+.modal-title {
     margin-bottom: 2rem;
     font-size: 2rem;
     color: var(--primary-color);
@@ -273,6 +309,17 @@ body {
     display: block;
     margin-bottom: 0.5rem;
     font-weight: 600;
+}
+
+input[type="text"], input[type="password"] {
+    width: 100%;
+    padding: 1rem;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    font-family: inherit;
+    font-size: 1rem;
+    outline: none;
+    background: rgba(255,255,255,0.9);
 }
 
 .qty-selector {
@@ -313,14 +360,15 @@ textarea {
     width: 100%;
     padding: 1rem;
     border-radius: 10px;
-    border: 1px solid #ddd;
+    border: 1px solid #ccc;
     font-family: inherit;
     resize: vertical;
     outline: none;
     transition: border-color 0.3s ease;
+    background: rgba(255,255,255,0.9);
 }
 
-textarea:focus {
+textarea:focus, input:focus {
     border-color: var(--primary-color);
 }
 
@@ -330,13 +378,13 @@ textarea:focus {
     font-size: 1.5rem;
     font-weight: 700;
     margin-top: 2rem;
-    border-top: 2px solid #eee;
+    border-top: 2px solid #ddd;
     padding-top: 1rem;
 }
 
-.whatsapp-btn {
+.whatsapp-btn, .submit-btn {
     width: 100%;
-    background: #25D366; /* WhatsApp color */
+    background: #25D366; 
     color: white;
     border: none;
     padding: 1rem;
@@ -349,10 +397,18 @@ textarea:focus {
     box-shadow: 0 4px 10px rgba(37, 211, 102, 0.3);
 }
 
+.submit-btn {
+    background: var(--primary-color);
+    box-shadow: 0 4px 10px rgba(226, 125, 96, 0.3);
+}
+
 .whatsapp-btn:hover {
     background: #128C7E;
     transform: translateY(-3px);
-    box-shadow: 0 6px 15px rgba(37, 211, 102, 0.4);
+}
+.submit-btn:hover {
+    background: #d16b50;
+    transform: translateY(-3px);
 }
 
 /* Reviews */
@@ -360,14 +416,27 @@ textarea:focus {
     flex-direction: column;
 }
 
+.reviews-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.reviews-header h2 {
+    color: var(--primary-color);
+    font-size: 2.5rem;
+    text-shadow: 0 2px 4px rgba(255,255,255,0.5);
+    margin-bottom: 1rem;
+}
+
 .reviews-container {
     background: var(--card-bg);
-    backdrop-filter: blur(15px);
+    backdrop-filter: var(--card-blur);
+    border: 1px solid var(--card-border);
     padding: 3rem;
     border-radius: 20px;
     width: 100%;
     max-width: 1000px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
     transform: translateY(50px);
     opacity: 0;
     transition: transform 1s var(--elastic), opacity 0.8s ease;
@@ -378,13 +447,6 @@ textarea:focus {
     opacity: 1;
 }
 
-.reviews-container h2 {
-    text-align: center;
-    color: var(--primary-color);
-    margin-bottom: 2rem;
-    font-size: 2.5rem;
-}
-
 .comments-list {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -392,7 +454,8 @@ textarea:focus {
 }
 
 .comment-card {
-    background: white;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
     padding: 1.5rem;
     border-radius: 15px;
     box-shadow: 0 5px 15px rgba(0,0,0,0.05);
@@ -411,7 +474,7 @@ textarea:focus {
 
 .comment-card p {
     font-size: 1rem;
-    color: #666;
+    color: #444;
     line-height: 1.5;
 }
 

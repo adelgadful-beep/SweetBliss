@@ -1,10 +1,26 @@
-document.addEventListener('DOMContentLoaded', () => {
-    // --- Video Scroll Sync ---
+import { db } from './firebase-config.js';
+import { collection, addDoc, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+document.addEventListener('DOMContentLoaded', async () => {
+    // --- Audio Control ---
     const video = document.getElementById('bg-video');
+    const volumeBtn = document.getElementById('volume-btn');
     
+    volumeBtn.addEventListener('click', () => {
+        if (video.muted) {
+            video.muted = false;
+            volumeBtn.textContent = '🔊';
+            volumeBtn.title = 'Mute Audio';
+        } else {
+            video.muted = true;
+            volumeBtn.textContent = '🔇';
+            volumeBtn.title = 'Toggle Audio';
+        }
+    });
+
+    // --- Video Scroll Sync ---
     video.addEventListener('loadedmetadata', () => {
         let ticking = false;
-        
         window.addEventListener('scroll', () => {
             if (!ticking) {
                 window.requestAnimationFrame(() => {
@@ -14,7 +30,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     
                     if (video.duration && !isNaN(video.duration)) {
                         const targetTime = video.duration * scrollPercentage;
-                        // Avoid errors by constraining targetTime
                         video.currentTime = Math.min(Math.max(targetTime, 0), video.duration - 0.1);
                     }
                     ticking = false;
@@ -24,7 +39,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // In case video metadata is already loaded (cached)
     if(video.readyState >= 1) {
         let event = new Event('loadedmetadata');
         video.dispatchEvent(event);
@@ -32,29 +46,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Intersection Observer for Elastic Animations ---
     const animatedElements = document.querySelectorAll('[data-animate]');
+    const observerOptions = { root: null, rootMargin: '0px', threshold: 0.2 };
     
-    const observerOptions = {
-        root: null,
-        rootMargin: '0px',
-        threshold: 0.2
-    };
-    
-    const observer = new IntersectionObserver((entries, observer) => {
+    const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 entry.target.classList.add('visible');
-            } else {
-                // Remove this line if you only want the animation to happen once
-                entry.target.classList.remove('visible');
             }
         });
     }, observerOptions);
-    
     animatedElements.forEach(el => observer.observe(el));
 
-    // --- Modal Logic ---
-    const modal = document.getElementById('order-modal');
-    const closeBtn = document.querySelector('.close-btn');
+    // --- Dynamic Settings ---
+    let whatsappNumber = '50662464128'; // Default (506 + 62464128)
+    try {
+        const settingsRef = doc(db, "settings", "contact");
+        const settingsSnap = await getDoc(settingsRef);
+        if (settingsSnap.exists() && settingsSnap.data().whatsapp) {
+            whatsappNumber = settingsSnap.data().whatsapp;
+        }
+    } catch (e) {
+        console.log("Usando número de WhatsApp por defecto.");
+    }
+
+    // --- Order Modal Logic ---
+    const orderModal = document.getElementById('order-modal');
+    const closeOrderBtn = document.getElementById('close-order-modal');
     const orderBtns = document.querySelectorAll('.order-btn');
     
     const qtyInput = document.getElementById('quantity');
@@ -62,7 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const qtyPlus = document.getElementById('qty-plus');
     const totalPriceEl = document.getElementById('total-price');
     const flavorInput = document.getElementById('flavor-input');
-    const modalTitle = document.getElementById('modal-title');
+    const orderModalTitle = document.getElementById('modal-title');
     const orderForm = document.getElementById('order-form');
     const giftMessage = document.getElementById('gift-message');
     
@@ -77,62 +94,90 @@ document.addEventListener('DOMContentLoaded', () => {
         btn.addEventListener('click', (e) => {
             const flavor = e.target.getAttribute('data-flavor');
             flavorInput.value = flavor;
-            modalTitle.textContent = `Ordenar Cheesecake de ${flavor}`;
+            orderModalTitle.textContent = `Ordenar Cheesecake de ${flavor}`;
             qtyInput.value = 1;
             giftMessage.value = '';
             updatePrice();
-            modal.classList.add('active');
+            orderModal.classList.add('active');
         });
     });
     
-    closeBtn.addEventListener('click', () => {
-        modal.classList.remove('active');
-    });
-    
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
-            modal.classList.remove('active');
-        }
-    });
+    closeOrderBtn.addEventListener('click', () => orderModal.classList.remove('active'));
     
     qtyMinus.addEventListener('click', () => {
         let val = parseInt(qtyInput.value);
-        if (val > 1) {
-            qtyInput.value = val - 1;
-            updatePrice();
-        }
+        if (val > 1) { qtyInput.value = val - 1; updatePrice(); }
     });
     
     qtyPlus.addEventListener('click', () => {
         let val = parseInt(qtyInput.value);
-        qtyInput.value = val + 1;
-        updatePrice();
+        qtyInput.value = val + 1; updatePrice();
     });
     
-    // --- WhatsApp Order Submission ---
     orderForm.addEventListener('submit', (e) => {
         e.preventDefault();
-        
         const flavor = flavorInput.value;
         const qty = qtyInput.value;
         const msg = giftMessage.value.trim();
         const total = qty * PRICE_PER_ITEM;
         
-        let whatsappText = `¡Hola SweetBliss! Me gustaría ordenar:\n\n`;
-        whatsappText += `🍰 Producto: Cheesecake de ${flavor}\n`;
-        whatsappText += `🔢 Cantidad: ${qty}\n`;
-        whatsappText += `💰 Total: ₡${total}\n`;
+        let text = `¡Hola SweetBliss! Me gustaría ordenar:\n\n🍰 Producto: Cheesecake de ${flavor}\n🔢 Cantidad: ${qty}\n💰 Total: ₡${total}\n`;
+        if (msg) text += `\n🎁 Mensaje de Regalo: "${msg}"\n`;
         
-        if (msg) {
-            whatsappText += `\n🎁 Mensaje de Regalo: "${msg}"\n`;
+        window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(text)}`, '_blank');
+        orderModal.classList.remove('active');
+    });
+
+    // --- Review Modal Logic ---
+    const reviewModal = document.getElementById('review-modal');
+    const closeReviewBtn = document.getElementById('close-review-modal');
+    const leaveReviewBtn = document.getElementById('leave-review-btn');
+    const reviewForm = document.getElementById('review-form');
+    const reviewFeedback = document.getElementById('review-feedback');
+    const submitReviewBtn = document.getElementById('submit-review-btn');
+
+    leaveReviewBtn.addEventListener('click', () => {
+        reviewForm.reset();
+        reviewFeedback.style.display = 'none';
+        submitReviewBtn.disabled = false;
+        reviewModal.classList.add('active');
+    });
+
+    closeReviewBtn.addEventListener('click', () => reviewModal.classList.remove('active'));
+
+    reviewForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        submitReviewBtn.disabled = true;
+        reviewFeedback.style.display = 'block';
+        reviewFeedback.textContent = 'Enviando...';
+        reviewFeedback.style.color = 'var(--text-color)';
+
+        const name = document.getElementById('review-name').value.trim();
+        const text = document.getElementById('review-text').value.trim();
+
+        try {
+            await addDoc(collection(db, "comments"), {
+                author: name,
+                text: text,
+                status: "pendiente",
+                createdAt: new Date()
+            });
+            reviewFeedback.textContent = '¡Gracias! Tu reseña ha sido enviada para aprobación.';
+            reviewFeedback.style.color = '#25D366'; // Green
+            setTimeout(() => {
+                reviewModal.classList.remove('active');
+            }, 3000);
+        } catch (error) {
+            console.error(error);
+            reviewFeedback.textContent = 'Hubo un error al enviar tu reseña. Verifica tu conexión.';
+            reviewFeedback.style.color = 'red';
+            submitReviewBtn.disabled = false;
         }
-        
-        const encodedText = encodeURIComponent(whatsappText);
-        // Costa Rica WhatsApp number provided by user: 86099810
-        const phoneNumber = '50686099810'; 
-        const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedText}`;
-        
-        window.open(whatsappUrl, '_blank');
-        modal.classList.remove('active');
+    });
+
+    // Close Modals on outside click
+    window.addEventListener('click', (e) => {
+        if (e.target === orderModal) orderModal.classList.remove('active');
+        if (e.target === reviewModal) reviewModal.classList.remove('active');
     });
 });

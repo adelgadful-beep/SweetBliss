@@ -7,7 +7,7 @@
     <meta name="description" content="SweetBliss - Deliciosos cheesecakes en 4 sabores: Fresa, Maracuyá, Mocaccino, Chocofresa.">
     <link rel="stylesheet" href="style.css">
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <!-- Navbar -->
@@ -25,6 +25,9 @@
     <video id="bg-video" class="bg-video" muted playsinline>
         <source src="assets/background-video.mp4" type="video/mp4">
     </video>
+
+    <!-- Volume Control -->
+    <button id="volume-btn" class="volume-btn" title="Toggle Audio">🔇</button>
 
     <!-- Content Sections -->
     <main class="content">
@@ -46,7 +49,7 @@
                     <h2>Fresa</h2>
                     <p>Un clásico atemporal. Suave y cremoso cheesecake coronado con nuestra deliciosa salsa de fresas naturales.</p>
                     <p class="price">₡2500</p>
-                    <button class="order-btn" data-flavor="Fresa">Order Now</button>
+                    <button class="btn order-btn" data-flavor="Fresa">Order Now</button>
                 </div>
             </div>
         </section>
@@ -61,12 +64,12 @@
                     <h2>Maracuyá</h2>
                     <p>La combinación perfecta entre lo dulce y lo ácido. Un toque tropical que despertará tus sentidos.</p>
                     <p class="price">₡2500</p>
-                    <button class="order-btn" data-flavor="Maracuyá">Order Now</button>
+                    <button class="btn order-btn" data-flavor="Maracuyá">Order Now</button>
                 </div>
             </div>
         </section>
 
-        <!-- Mocaccino / Chocolate -->
+        <!-- Mocaccino -->
         <section id="mocaccino" class="section flavor-section">
             <div class="flavor-card" data-animate>
                 <div class="image-container">
@@ -76,7 +79,7 @@
                     <h2>Mocaccino</h2>
                     <p>Para los amantes del chocolate y el café. Una explosión de sabor intenso en cada cucharada.</p>
                     <p class="price">₡2500</p>
-                    <button class="order-btn" data-flavor="Mocaccino">Order Now</button>
+                    <button class="btn order-btn" data-flavor="Mocaccino">Order Now</button>
                 </div>
             </div>
         </section>
@@ -91,7 +94,7 @@
                     <h2>Chocofresa</h2>
                     <p>Lo mejor de ambos mundos. La frescura de la fresa cubierta con un indulgente baño de chocolate.</p>
                     <p class="price">₡2500</p>
-                    <button class="order-btn" data-flavor="Chocofresa">Order Now</button>
+                    <button class="btn order-btn" data-flavor="Chocofresa">Order Now</button>
                 </div>
             </div>
         </section>
@@ -99,9 +102,11 @@
         <!-- Comentarios Section -->
         <section id="reviews" class="section reviews-section">
             <div class="reviews-container" data-animate>
-                <h2>Lo que dicen nuestros clientes</h2>
+                <div class="reviews-header">
+                    <h2>Lo que dicen nuestros clientes</h2>
+                    <button id="leave-review-btn" class="btn">Dejar una Reseña</button>
+                </div>
                 <div id="comments-list" class="comments-list">
-                    <!-- Firebase comments will be loaded here -->
                     <p class="loading-text">Cargando reseñas...</p>
                 </div>
             </div>
@@ -111,8 +116,8 @@
     <!-- Order Modal -->
     <div id="order-modal" class="modal">
         <div class="modal-content">
-            <span class="close-btn">&times;</span>
-            <h3 id="modal-title">Order Now</h3>
+            <span class="close-btn" id="close-order-modal">&times;</span>
+            <h3 class="modal-title" id="modal-title">Order Now</h3>
             <form id="order-form">
                 <input type="hidden" id="flavor-input">
                 <div class="form-group">
@@ -136,9 +141,28 @@
         </div>
     </div>
 
+    <!-- Review Modal -->
+    <div id="review-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" id="close-review-modal">&times;</span>
+            <h3 class="modal-title">Deja tu Reseña</h3>
+            <form id="review-form">
+                <div class="form-group">
+                    <label for="review-name">Tu Nombre:</label>
+                    <input type="text" id="review-name" required placeholder="Ej. Juan Pérez">
+                </div>
+                <div class="form-group">
+                    <label for="review-text">Tu Comentario:</label>
+                    <textarea id="review-text" rows="4" required placeholder="¡Me encantó el cheesecake de..."></textarea>
+                </div>
+                <button type="submit" class="submit-btn" id="submit-review-btn">Enviar Reseña</button>
+            </form>
+            <p id="review-feedback" style="margin-top:1rem; font-weight:600; text-align:center; display:none;"></p>
+        </div>
+    </div>
+
     <!-- Scripts -->
-    <!-- Firebase SDK (Modular) -->
     <script type="module" src="firebase-config.js"></script>
-    <script src="main.js"></script>
+    <script type="module" src="main.js"></script>
 </body>
 </html>
