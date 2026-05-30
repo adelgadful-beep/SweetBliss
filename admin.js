@@ -50,11 +50,14 @@ document.addEventListener('DOMContentLoaded', () => {
     let unsubscribeComments = null;
 
     function loadDashboard() {
-        // Load Settings (WhatsApp)
+        // Load Settings (WhatsApp & Audio)
         const settingsRef = doc(db, "settings", "contact");
         getDoc(settingsRef).then((snap) => {
-            if (snap.exists() && snap.data().whatsapp) {
-                settingWa.value = snap.data().whatsapp;
+            if (snap.exists()) {
+                if(snap.data().whatsapp) settingWa.value = snap.data().whatsapp;
+                else settingWa.value = '50662464128';
+                
+                if(snap.data().audioUrl) document.getElementById('setting-audio').value = snap.data().audioUrl;
             } else {
                 settingWa.value = '50662464128'; // El número solicitado como fallback
             }
@@ -130,8 +133,9 @@ document.addEventListener('DOMContentLoaded', () => {
     settingsForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         const wa = settingWa.value.trim();
+        const audioUrl = document.getElementById('setting-audio').value.trim();
         try {
-            await setDoc(doc(db, "settings", "contact"), { whatsapp: wa }, { merge: true });
+            await setDoc(doc(db, "settings", "contact"), { whatsapp: wa, audioUrl: audioUrl }, { merge: true });
             settingsMsg.textContent = "Guardado correctamente.";
             setTimeout(() => settingsMsg.textContent = "", 3000);
         } catch(err) {

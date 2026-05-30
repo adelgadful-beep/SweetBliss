@@ -2,12 +2,35 @@ import { db } from './firebase-config.js';
 import { collection, addDoc, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 document.addEventListener('DOMContentLoaded', async () => {
-    // --- Audio Control ---
+    // --- Elements ---
     const video = document.getElementById('bg-video');
     const audio = document.getElementById('bg-audio');
     const volumeBtn = document.getElementById('volume-btn');
     
-    // Attempt autoplay
+    // --- Dynamic Settings ---
+    let whatsappNumber = '50662464128'; // Default
+    // Default upbeat audio track (Royalty free)
+    const defaultAudioUrl = 'https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=good-vibes-127577.mp3'; 
+    
+    try {
+        const settingsRef = doc(db, "settings", "contact");
+        const settingsSnap = await getDoc(settingsRef);
+        if (settingsSnap.exists()) {
+            if(settingsSnap.data().whatsapp) whatsappNumber = settingsSnap.data().whatsapp;
+            if(settingsSnap.data().audioUrl) {
+                audio.src = settingsSnap.data().audioUrl;
+            } else {
+                audio.src = defaultAudioUrl;
+            }
+        } else {
+            audio.src = defaultAudioUrl;
+        }
+    } catch (e) {
+        console.log("Usando ajustes por defecto.");
+        audio.src = defaultAudioUrl;
+    }
+
+    // --- Audio Control (Runs after fetching settings) ---
     audio.volume = 0.5;
     let audioPlaying = false;
 
@@ -85,18 +108,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }, observerOptions);
     animatedElements.forEach(el => observer.observe(el));
-
-    // --- Dynamic Settings ---
-    let whatsappNumber = '50662464128'; // Default (506 + 62464128)
-    try {
-        const settingsRef = doc(db, "settings", "contact");
-        const settingsSnap = await getDoc(settingsRef);
-        if (settingsSnap.exists() && settingsSnap.data().whatsapp) {
-            whatsappNumber = settingsSnap.data().whatsapp;
-        }
-    } catch (e) {
-        console.log("Usando número de WhatsApp por defecto.");
-    }
 
     // --- Order Modal Logic ---
     const orderModal = document.getElementById('order-modal');
@@ -198,7 +209,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             }, 3000);
         } catch (error) {
             console.error(error);
-            reviewFeedback.textContent = 'Hubo un error al enviar tu reseña. Verifica tu conexión.';
+            reviewFeedback.textContent = 'Error: No se pudo enviar. Revisa las reglas de seguridad de Firestore.';
             reviewFeedback.style.color = 'red';
             submitReviewBtn.disabled = false;
         }
@@ -212,7 +223,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // --- Floating Parallax Particles ---
     const overlay = document.getElementById('parallax-overlay');
-    const particleTypes = ['✨', '🍓', '🍃', '🍫', '☕', '✦'];
+    // Emojis removidos, solo dejamos brillos/estrellas sutiles
+    const particleTypes = ['✨', '✦', '💫'];
     for(let i=0; i<20; i++) {
         const p = document.createElement('div');
         p.className = 'particle';

@@ -62,12 +62,16 @@
 
             <!-- Settings -->
             <div class="settings-card">
-                <h3 style="margin-bottom:1rem; color:var(--primary-color);">Configuración de WhatsApp</h3>
+                <h3 style="margin-bottom:1rem; color:var(--primary-color);">Configuración de la Web</h3>
                 <p style="margin-bottom: 1rem; color: #555; font-size: 0.9rem;">Los pedidos web se enviarán a este número. Debe incluir el código de país sin símbolos (ej. 506 para Costa Rica).</p>
                 <form id="settings-form">
                     <div class="form-group">
                         <label>Número de WhatsApp:</label>
                         <input type="text" id="setting-wa" placeholder="Ej. 50662464128" required>
+                    </div>
+                    <div class="form-group">
+                        <label>URL de Audio de Fondo (MP3 o vacío para usar el predeterminado):</label>
+                        <input type="url" id="setting-audio" placeholder="https://ejemplo.com/audio.mp3">
                     </div>
                     <div style="display:flex; align-items:center;">
                         <button type="submit" class="submit-btn" style="width:auto; margin-top:0;">Guardar Cambios</button>

@@ -36,7 +36,9 @@ body {
     height: 100vh;
     object-fit: cover;
     z-index: -2;
-    opacity: 0.8; 
+    opacity: 0.8;
+    will-change: transform, opacity;
+    transform: translateZ(0); /* Hardware acceleration */
 }
 
 /* Volume Button */
@@ -516,12 +518,16 @@ textarea:focus, input:focus {
         gap: 2rem;
     }
     
-    .marquee-container {
-        display: none;
+    .navbar {
+        flex-direction: column;
+        justify-content: center;
+        gap: 1rem;
+        padding: 1rem;
     }
     
-    .navbar {
-        justify-content: center;
+    .marquee-container {
+        margin-left: 0;
+        width: 100%;
     }
     
     .hero-content h1 {
